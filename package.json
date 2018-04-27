@@ -1,0 +1,40 @@
+{
+  "name": "learning-plan-manager-minimal",
+  "version": "1.0.0",
+  "description": "A Manager to manage leaning plan",
+  "main": "index.js",
+  "author": "Nishant Jain",
+  "license": "MIT",
+  "dependencies": {
+    "bunyan": "^1.8.12",
+    "express": "^4.16.3",
+    "express-graphql": "^0.6.12",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^2.24.0",
+    "lodash": "^4.17.10",
+    "mongoose": "^5.0.16"
+  },
+  "jest": {
+    "verbose": true,
+    "collectCoverage": true
+  },
+  "scripts": {
+    "start": "nodemon bin/www --exec babel-node",
+    "lint": "eslint .",
+    "lint-fix": "eslint --fix .",
+    "test-debug": "mocha --inspect --debug-brk --exit -t 10000 --require babel-register api/course/*.spec.js",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-jest": "^22.4.3",
+    "babel-preset-env": "^1.6.1",
+    "babel-register": "^6.26.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.11.0",
+    "jest": "^22.4.3",
+    "nodemon": "^1.17.3",
+    "should": "^13.2.1"
+  }
+}
