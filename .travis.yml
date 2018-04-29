@@ -9,7 +9,7 @@ before_script:
   - sudo apt-get install zip
   - docker run -d -p 27017:27017 --name mongodb-container mvertes/alpine-mongo
 install:
-  - yarn run install
+  - yarn install
 script:
   - yarn test
   - zip -qr learning-plan-manager.zip . -x *.git* node_modules/\*
