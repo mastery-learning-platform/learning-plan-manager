@@ -1,5 +1,5 @@
 /**
- * @fileOverview File to ensure all the types of the CourseType
+ * @fileOverview File to avoid regressions on course typedef.
  * @author Nishant Jain
  */
 
@@ -221,19 +221,21 @@ describe('Branch Input Type', () => {
  * @summary Tests Types of methods defined under Query type
  */
 describe('Query Type', () => {
-  test('Should have property course to return collection of Course', () => {
+  test('Should have property courses to return collection of Course', () => {
     const fields = QueryType.getFields();
     expect(fields.courses.type.constructor).toEqual(GraphQLList);
     expect(fields.courses.type.ofType).toEqual(CourseType);
+    expect(fields.courses.args.length).toBe(1);
+    expect(fields.courses.args[0].type).toEqual(GraphQLString);
   });
 
-  test('Should have property course accepting courseId and return Course', () => {
-    const fields = QueryType.getFields();
-    expect(fields.course.type).toEqual(CourseType);
-    expect(fields.course.args.length).toBe(1);
-    expect(fields.course.args[0].type.constructor).toEqual(GraphQLNonNull);
-    expect(fields.course.args[0].type.ofType).toEqual(GraphQLString);
-  });
+  // test('Should have property course accepting courseId and return Course', () => {
+  //   const fields = QueryType.getFields();
+  //   expect(fields.course.type).toEqual(CourseType);
+  //   expect(fields.course.args.length).toBe(1);
+  //   expect(fields.course.args[0].type.constructor).toEqual(GraphQLNonNull);
+  //   expect(fields.course.args[0].type.ofType).toEqual(GraphQLString);
+  // });
 });
 
 /**

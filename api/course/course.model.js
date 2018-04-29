@@ -107,21 +107,14 @@ CourseSchema.virtual('courseId').get(function getCourseId() {
 });
 
 /**
- * Creates a node with following arguments
- * @param {String} nodeType - tree|blob
- * @param {String} title
- * @param {String} blobType
- * @param {String} url
+ * @see {@link CourseSchema.statics.addNode}
  * @returns {Node} node
  */
-CourseSchema.statics.createNode = function
-createNode(nodeType, title, blobType = null, url = null) {
-  const node = new NodeModel({
-    nodeType,
-    title,
-    blobType,
-    url,
-  });
+CourseSchema.statics.createNode = async function
+createNode(courseId, branchName, nodeToBeCreated, path) {
+  const courseWithCreatedNode = await this.addNode(courseId, branchName, nodeToBeCreated, path);
+  const nodeModel = new NodeModel(nodeToBeCreated);
+  const node = _.assign(courseWithCreatedNode.nodes[nodeModel.checksum], courseId);
   return node;
 };
 
@@ -137,7 +130,7 @@ initializeBranchWithCommits(course, branchName, parentBranchName) {
   const courseCopy = _.cloneDeep(course);
   courseCopy.branches[branchName] = {};
   courseCopy.branches[branchName].parent = parentBranchName;
-  const node = this.createNode('tree', course.title);
+  const node = new NodeModel({ nodeType: 'tree', title: courseCopy.title });
   courseCopy.nodes[node.checksum] = node;
   const commit = {
     timestamp: +new Date(),
@@ -172,6 +165,21 @@ CourseSchema.statics.addBranch = async function addBranch(courseId, branchName, 
     { new: true },
   ).exec();
   return updatedCourse;
+};
+
+/**
+ * @see {@link CourseSchema.statics.addBranch}
+ * @returns {Object} Branch
+ */
+CourseSchema.statics.createBranch = async function createBranch(courseId, branchName, parentBranchName = 'master') {
+  const courseWithBranchAdded = await this.addBranch(courseId, branchName, parentBranchName);
+  const { branches } = courseWithBranchAdded;
+  const rootOfBranch = courseWithBranchAdded.nodes[_.last(branches[branchName].commits).checksum];
+  const addedBranch = {
+    title: branchName,
+    root: rootOfBranch,
+  };
+  return addedBranch;
 };
 
 /**

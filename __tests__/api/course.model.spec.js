@@ -4,7 +4,6 @@ import mongoose from 'mongoose';
 
 import { CourseModel, NodeModel } from '../../api/course';
 
-
 /**
  * @async
  * @returns {Course} Course
@@ -34,10 +33,30 @@ const mockAdditionOfBlobAtRootOfMaster = async () => {
   return courseWithAddedNode;
 };
 
+const mockCreationOfBlobAtRootOfMaster = async () => {
+  const course = await mockAdditionOfNewCourse();
+  const node = {
+    title: 'Test Node',
+    description: 'This node is for testing nodes',
+    nodeType: 'BLOB',
+    blobType: 'VIDEO',
+    url: 'http://testurl.com',
+  };
+  const root = _.head(course.branches.master.commits).checksum;
+  const createdNode = await CourseModel.createNode(course.courseId, 'master', node, [root]);
+  return createdNode;
+};
+
 const mockAdditionOfBranchInCourse = async (branchName, parent) => {
   const course = await mockAdditionOfNewCourse();
   const courseWithAddedBranch = await CourseModel.addBranch(course._id, branchName, parent);
   return courseWithAddedBranch;
+};
+
+const mockCreationOfBranchInCourse = async (branchName, parent) => {
+  const course = await mockAdditionOfNewCourse();
+  const createdBranch = await CourseModel.createBranch(course.courseId, branchName, parent);
+  return createdBranch;
 };
 
 const mockAdditionOfNodeInNewBranch = async (branchName, parent) => {
@@ -73,12 +92,10 @@ const mockAdditionOfBlobToTree = async (treeNode, blobNode) => {
 jest.setTimeout(15000);
 
 describe('Course Model', () => {
-  beforeAll((done) => {
-    mongoose.connect('mongodb://localhost/test', {
+  beforeAll(async () => {
+    await mongoose.connect('mongodb://localhost/test', {
       autoReconnect: true,
       reconnectTries: Number.MAX_VALUE,
-    }, (err) => {
-      done(err);
     });
   });
 
@@ -97,6 +114,11 @@ describe('Course Model', () => {
     _.keys(courseWithAddedNode.nodes).length.should.be.exactly(3);
   });
 
+  test('Should be able to create a node and return the createdNode', async () => {
+    const createdNode = await mockCreationOfBlobAtRootOfMaster();
+    createdNode.should.have.properties(['title', 'nodeType', 'blobType', 'url']);
+  });
+
   test('Should be able to create a new branch in the course', async () => {
     const branchName = 'Attention on Basics';
     const courseWithAddedBranch = await mockAdditionOfBranchInCourse(branchName, 'master');
@@ -106,13 +128,20 @@ describe('Course Model', () => {
     courseWithAddedBranch.nodes[lastCommit].children.length.should.be.exactly(0);
   });
 
-  test('Should be able to create a new branch, defaulting the parent branch as master', async () => {
+  test('Should be able to create a new branch, with default value of parentBranch as master', async () => {
     const branchName = 'Attention on Basics';
     const courseWithAddedBranch = await mockAdditionOfBranchInCourse(branchName);
     _.keys(courseWithAddedBranch.branches).length.should.be.exactly(2);
     courseWithAddedBranch.branches[branchName].commits.length.should.be.exactly(1);
     const lastCommit = _.last(courseWithAddedBranch.branches['Attention on Basics'].commits).checksum;
     courseWithAddedBranch.nodes[lastCommit].children.length.should.be.exactly(0);
+  });
+
+  test('Should be able to create a new branch and return createdBranch, with default value of parentBranch as master', async () => {
+    const branchName = 'Attention on Basics';
+    const createdBranch = await mockCreationOfBranchInCourse(branchName);
+    createdBranch.should.have.properties(['title', 'root']);
+    createdBranch.root.should.have.properties(['title', 'nodeType', 'children']);
   });
 
   test('Should be able to add a new node in the new branch in the course', async () => {
@@ -141,7 +170,7 @@ describe('Course Model', () => {
     addedNode.children.length.should.be.exactly(0);
   });
 
-  test('Should be able to nested node, say a blob type node inside a tree node', async () => {
+  test('Should be able to create a nested node, say a blob type node inside a tree node', async () => {
     const blobNode = {
       title: 'Test Node',
       nodeType: 'blob',
@@ -187,7 +216,7 @@ describe('Course Model', () => {
   });
 
   afterAll(async () => {
-    await mongoose.connection.db.dropDatabase();
+    await mongoose.connection.db.dropDatabase('test');
     await mongoose.connection.close();
     await mongoose.connection.db.close();
   });

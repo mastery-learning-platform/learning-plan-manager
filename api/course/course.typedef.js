@@ -82,11 +82,9 @@ input BranchInput {
 
 type Query {
   # Gets all the courses in the store
-  courses: [Course]
+  courses(courseId: String): [Course]
   # Gets the User
   user(userId: String!): User
-  # Gets the course by courseID
-  course(courseId: String!): Course
   # Gets the node by checksum
   nodes(courseId: String!, checksums: [String]): [Node]
 }
