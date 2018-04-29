@@ -1,0 +1,20 @@
+language: node_js
+notifications:
+  slack: theselftalk:EHiDWYYgq34Y172TrHTqA16W
+node_js:
+  - stable
+services:
+  - docker
+before_script:
+  - sudo apt-get install zip
+  - docker run -d -p 27017:27017 --name mongodb-container mvertes/alpine-mongo
+install:
+  - yarn run install
+script:
+  - yarn test
+  - zip -qr learning-plan-manager.zip . -x *.git* node_modules/\*
+deploy:
+  provider: releases
+  api_key: ${GITHUB_OAUTH_TOKEN}
+  file: 'learning-plan-manager.zip'
+  skip_cleanup: true

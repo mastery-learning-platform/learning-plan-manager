@@ -1,0 +1,4 @@
+# Ignore nyc_output
+.nyc_output
+# Ignore coverage folder
+coverage

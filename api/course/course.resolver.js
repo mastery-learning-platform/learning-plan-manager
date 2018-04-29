@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const createCourse = async (obj, args, context) => {
   const { title, description } = args.input;
   const createdCourse = await context.mongo.models.course.createCourse(title, description);
