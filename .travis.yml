@@ -11,6 +11,7 @@ before_script:
 install:
   - yarn install
 script:
+  - yarn lint
   - yarn test
   - zip -qr learning-plan-manager.zip . -x *.git* node_modules/\*
 deploy:
