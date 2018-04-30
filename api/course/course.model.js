@@ -36,6 +36,14 @@ const CourseSchema = new mongoose.Schema({
 }, { toJSON: { virtuals: true } });
 
 /**
+ * @summary Gets the courseId
+ * @returns courseId
+ */
+CourseSchema.virtual('courseId').get(function getCourseId() {
+  return this._id;
+});
+
+/**
  * Given an object, it stringifies the object and
  * returns with a checksum.
  * @param {Object} object
@@ -143,14 +151,6 @@ CourseSchema.statics.deleteNode = async function deleteNode(courseId, branchName
   const updatedCourse = await this.findOneAndUpdate({ _id: courseId }, course, { new: true });
   return updatedCourse;
 };
-
-/**
- * @summary Gets the courseId
- * @returns courseId
- */
-CourseSchema.virtual('courseId').get(function getCourseId() {
-  return this._id;
-});
 
 /**
  * @see {@link CourseSchema.statics.addNode}

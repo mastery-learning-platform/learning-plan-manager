@@ -39,7 +39,7 @@ type Course {
   # Branches of all the courses
   branches: [Branch]
   # Gets all the nodes of the course matching the checksums
-  nodes(checksums: [String]): [Node]
+  nodes: [Node]
 }
 
 type User {
