@@ -17,12 +17,10 @@ const courses = async (obj, args, context) => {
   const foundCourses = await context.mongo.models.course.find({});
   const transformedCourses = _.map(foundCourses, (course) => {
     const { branches, nodes } = course;
-    const transformedBranches = _.map(branches, (value, key) => {
-      return {
-        title: key,
-        root: course.toJSON().nodes[_.last(value.commits).checksum],
-      };
-    });
+    const transformedBranches = _.map(branches, (value, key) => ({
+      title: key,
+      root: course.toJSON().nodes[_.last(value.commits).checksum],
+    }));
     const transformedNodes = _.map(nodes, value => value);
     return Object.assign(
       {},
