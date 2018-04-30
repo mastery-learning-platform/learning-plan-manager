@@ -99,6 +99,52 @@ CourseSchema.statics.addNode = async function addNode(courseId, branchName, node
 };
 
 /**
+ * @async
+ * @param {String} courseId Id of the course
+ * @param {String} branchName Name of the branch in the course to be updated.
+ * @param {String} path Path at which the node is to be removed.
+ * @returns {Course} course
+ * @summary Removes Nodes in the course
+ */
+CourseSchema.statics.deleteNode = async function deleteNode(courseId, branchName, path) {
+  const course = await this.findOne({ _id: courseId }).exec();
+  const nodeToBeRemoved = _.last(path);
+  const pathWithLastNodeRemoved = _.initial(path);
+  const pathWithNullAtHead = _.concat([null], pathWithLastNodeRemoved);
+  const rootNode = _.reduceRight(
+    pathWithNullAtHead,
+    ({ checksumOfNodeToBeRemoved, nodeToBeAdded }, currentPath) => {
+      let node;
+      if (nodeToBeAdded) {
+        node = new NodeModel(nodeToBeAdded);
+        course.nodes[node.checksum] = node;
+      }
+      if (currentPath) {
+        const nodeAtCurrentPath = _.cloneDeep(course.nodes[currentPath]);
+        nodeAtCurrentPath.children =
+          _.without(nodeAtCurrentPath.children, checksumOfNodeToBeRemoved);
+        nodeAtCurrentPath.children = node ?
+          _.concat(nodeAtCurrentPath.children, node.checksum) :
+          nodeAtCurrentPath.children;
+        return {
+          checksumOfNodeToBeRemoved: nodeAtCurrentPath.checksum,
+          nodeToBeAdded: _.omit(nodeAtCurrentPath, 'checksum'),
+        };
+      }
+      return node;
+    },
+    { checksumOfNodeToBeRemoved: nodeToBeRemoved, nodeToBeAdded: null },
+  );
+  const commit = {
+    timestamp: +new Date(),
+    checksum: rootNode.checksum,
+  };
+  course.branches[branchName].commits.push(commit);
+  const updatedCourse = await this.findOneAndUpdate({ _id: courseId }, course, { new: true });
+  return updatedCourse;
+};
+
+/**
  * @summary Gets the courseId
  * @returns courseId
  */

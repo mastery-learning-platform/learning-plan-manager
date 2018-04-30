@@ -89,6 +89,16 @@ const mockAdditionOfBlobToTree = async (treeNode, blobNode) => {
   return courseWithAddedNode;
 };
 
+const mockDeletionOfBlobFromTree = async (treeNode, blobNode) => {
+  const courseWithAddedNodes = await mockAdditionOfBlobToTree(treeNode, blobNode);
+  const { checksum: rootNodeChecksum } = _.last(courseWithAddedNodes.branches.master.commits);
+  const { checksum: treeNodeModelChecksum } = new NodeModel(treeNode);
+  const { checksum: blobNodeModelChecksum } = new NodeModel(blobNode);
+  const path = [rootNodeChecksum, treeNodeModelChecksum, blobNodeModelChecksum];
+  const courseWithDeletedNodes = await CourseModel.deleteNode(courseWithAddedNodes.courseId, 'master', path);
+  return courseWithDeletedNodes;
+};
+
 jest.setTimeout(15000);
 
 describe('Course Model', () => {
@@ -213,6 +223,27 @@ describe('Course Model', () => {
     const fetchedNodes = await CourseModel.fetchNodes(courseWithAddedNodes._id, checksums);
     fetchedNodes.should.be.an.instanceOf(Array);
     fetchedNodes.length.should.be.above(0);
+  });
+
+  test('Should be able to remove nodes from the course', async () => {
+    const blobNode = {
+      title: 'Test Node',
+      nodeType: 'blob',
+      blobType: 'VIDEO',
+      url: 'www.youtube.com/rxksff',
+    };
+    const treeNode = {
+      title: 'Test Folder',
+      nodeType: 'tree',
+    };
+    const { checksum: blobNodeModelChecksum } = new NodeModel(blobNode);
+    const courseWithDeletedNodes = await mockDeletionOfBlobFromTree(treeNode, blobNode);
+    should.exist(courseWithDeletedNodes);
+    should.exist(courseWithDeletedNodes.nodes[blobNodeModelChecksum]);
+    const { checksum: rootNodeChecksum } = _.last(courseWithDeletedNodes.branches.master.commits);
+    should.exist(courseWithDeletedNodes.nodes[rootNodeChecksum]);
+    const rootNodesChildChecksum = _.last(courseWithDeletedNodes.nodes[rootNodeChecksum].children);
+    courseWithDeletedNodes.nodes[rootNodesChildChecksum].children.length.should.be.exactly(0);
   });
 
   afterAll(async () => {
