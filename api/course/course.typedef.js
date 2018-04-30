@@ -16,6 +16,8 @@ type Node {
   url: String
   # A List of Children
   children: [Node]
+  # Concepts covered by the node
+  concepts: [String]
 }
 
 type Branch {
@@ -67,6 +69,8 @@ input NodeInput {
   blobType: String
   # The url to the blob content
   url: String
+  # Concepts covered by the node
+  concepts: [String]
   # Path at which the node should be created
   path: String!
 }

@@ -126,7 +126,7 @@ describe('Course Model', () => {
 
   test('Should be able to create a node and return the createdNode', async () => {
     const createdNode = await mockCreationOfBlobAtRootOfMaster();
-    createdNode.should.have.properties(['title', 'nodeType', 'blobType', 'url']);
+    createdNode.should.have.properties(['title', 'nodeType', 'blobType', 'url', 'concepts']);
   });
 
   test('Should be able to create a new branch in the course', async () => {
@@ -151,7 +151,7 @@ describe('Course Model', () => {
     const branchName = 'Attention on Basics';
     const createdBranch = await mockCreationOfBranchInCourse(branchName);
     createdBranch.should.have.properties(['title', 'root']);
-    createdBranch.root.should.have.properties(['title', 'nodeType', 'children']);
+    createdBranch.root.should.have.properties(['title', 'nodeType', 'children', 'concepts']);
   });
 
   test('Should be able to add a new node in the new branch in the course', async () => {
@@ -173,11 +173,12 @@ describe('Course Model', () => {
     courseWithAddedNode.branches.master.commits.length.should.be.exactly(2);
     _.keys(courseWithAddedNode.nodes).length.should.be.exactly(3);
     const addedNode = courseWithAddedNode.nodes[checksum];
-    addedNode.should.have.properties(['title', 'nodeType', 'checksum', 'children']);
+    addedNode.should.have.properties(['title', 'nodeType', 'checksum', 'children', 'concepts']);
     addedNode.title.should.be.exactly(node.title);
     addedNode.nodeType.should.be.exactly(node.nodeType);
     addedNode.checksum.should.be.exactly(checksum);
     addedNode.children.length.should.be.exactly(0);
+    addedNode.concepts.length.should.be.exactly(0);
   });
 
   test('Should be able to create a nested node, say a blob type node inside a tree node', async () => {
@@ -201,12 +202,13 @@ describe('Course Model', () => {
     const rootTree = courseWithAddedBlobUnderTree.nodes[lastCommit];
     const createdTreeNode = courseWithAddedBlobUnderTree.nodes[rootTree.children[0]];
     const createdBlobTree = courseWithAddedBlobUnderTree.nodes[createdTreeNode.children[0]];
-    createdTreeNode.should.have.properties(['title', 'nodeType', 'children', 'checksum']);
+    createdTreeNode.should.have.properties(['title', 'nodeType', 'children', 'checksum', 'concepts']);
     createdTreeNode.nodeType.should.be.exactly('tree');
     createdTreeNode.title.should.be.exactly(treeNode.title);
     createdBlobTree.nodeType.should.be.exactly('blob');
     createdBlobTree.title.should.be.exactly('Test Node');
     createdBlobTree.blobType.should.be.exactly('VIDEO');
+    createdBlobTree.concepts.length.should.be.exactly(0);
   });
 
   test('Should be able to get all the nodes from the course', async () => {

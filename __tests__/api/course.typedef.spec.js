@@ -119,6 +119,12 @@ describe('Node Type', () => {
     const fields = NodeType.getFields();
     expect(fields.url.type).toEqual(GraphQLString);
   });
+
+  test('Should have property concepts of type String', () => {
+    const fields = NodeType.getFields();
+    expect(fields.concepts.type.constructor).toEqual(GraphQLList);
+    expect(fields.concepts.type.ofType).toEqual(GraphQLString);
+  });
 });
 
 /**
@@ -228,14 +234,6 @@ describe('Query Type', () => {
     expect(fields.courses.args.length).toBe(1);
     expect(fields.courses.args[0].type).toEqual(GraphQLString);
   });
-
-  // test('Should have property course accepting courseId and return Course', () => {
-  //   const fields = QueryType.getFields();
-  //   expect(fields.course.type).toEqual(CourseType);
-  //   expect(fields.course.args.length).toBe(1);
-  //   expect(fields.course.args[0].type.constructor).toEqual(GraphQLNonNull);
-  //   expect(fields.course.args[0].type.ofType).toEqual(GraphQLString);
-  // });
 });
 
 /**

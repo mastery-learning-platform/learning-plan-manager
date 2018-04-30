@@ -22,6 +22,9 @@ const NodeSchema = new mongoose.Schema({
   children: {
     type: Array,
   },
+  concepts: {
+    type: [String],
+  },
 }, {
   _id: false,
 });
