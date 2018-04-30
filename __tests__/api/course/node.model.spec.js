@@ -1,5 +1,5 @@
 import should from 'should';
-import { NodeModel } from '../../api/course';
+import { NodeModel } from '../../../api/course';
 
 describe('Node', () => {
   it('Should be able to create a Node of nodetype Tree', () => {

@@ -2,7 +2,7 @@ import _ from 'lodash';
 import should from 'should';
 import mongoose from 'mongoose';
 
-import { CourseModel, NodeModel } from '../../api/course';
+import { CourseModel, NodeModel } from '../../../api/course';
 
 /**
  * @async

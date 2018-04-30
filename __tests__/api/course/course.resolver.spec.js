@@ -4,7 +4,7 @@ import should from 'should';
 import mongoose from 'mongoose';
 import dummyjson from 'dummy-json';
 
-import { CourseResolver, CourseModel, NodeModel } from '../../api/course';
+import { CourseResolver, CourseModel, NodeModel } from '../../../api/course';
 
 let context;
 

@@ -6,7 +6,7 @@
 import { buildSchemaFromTypeDefinitions } from 'graphql-tools';
 import { GraphQLString, GraphQLNonNull, GraphQLList } from 'graphql';
 
-import { CourseTypeDef } from '../../api/course';
+import { CourseTypeDef } from '../../../api/course';
 
 const schema = buildSchemaFromTypeDefinitions([CourseTypeDef]);
 
