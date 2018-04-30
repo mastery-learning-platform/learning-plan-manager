@@ -8,7 +8,7 @@ import { CourseResolver, CourseModel, NodeModel } from '../../../api/course';
 
 let context;
 
-const defaultCourseId = mongoose.Types.ObjectId();
+const defaultCourseId = mongoose.Types.ObjectId().toHexString();
 const cachedNodes = (() => {
   const nodesTemplate = `
     {
@@ -96,7 +96,7 @@ describe('Course Resolver', () => {
     const branchName = 'master';
     const args = {
       courseId: defaultCourseId,
-      node,
+      node: node.toJSON(),
       branchName,
     };
     const createdNode = await CourseResolver.Mutation.createNode({}, args, context);

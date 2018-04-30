@@ -86,20 +86,42 @@ input BranchInput {
 
 type Query {
   # Gets all the courses in the store
-  courses(courseId: String): [Course]
+  courses(
+    # Id of the course
+    courseId: String
+  ): [Course]
   # Gets the User
-  user(userId: String!): User
+  user(
+    # Id of the user
+    userId: String!
+  ): User
   # Gets the node by checksum
-  nodes(courseId: String!, checksums: [String]): [Node]
+  nodes(
+    # Id of the course
+    courseId: String!,
+    # checksums of the nodes to be fetched
+    checksums: [String]
+  ): [Node]
 }
 
 type Mutation {
   # Creates a new course in platform
-  createCourse(input: CourseInput): Course
+  createCourse(
+    input: CourseInput
+  ): Course
   # Creates a new branch in the course
-  createBranch(input: BranchInput): Branch
+  createBranch(
+    input: BranchInput
+  ): Branch
   # Creates a new node in branch of the course
-  createNode(courseId: String, branchName: String, node: NodeInput): Node
+  createNode(
+    # Id of the Course
+    courseId: String,
+    # Branch Name of the course
+    branchName: String,
+    # Node to be added
+    node: NodeInput
+  ): Node
 }
 `;
 
