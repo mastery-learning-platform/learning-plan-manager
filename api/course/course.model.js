@@ -256,7 +256,7 @@ CourseSchema.statics.createCourse = async function createCourse(title, descripti
  * @summary Returns a collection of node matching with checksum in checksums collection.
  */
 CourseSchema.statics.fetchNodes = async function findNodes(courseId, checksums) {
-  const foundCourse = await this.findById(mongoose.Types.ObjectId(courseId), {}, { lean: true }).exec();
+  const foundCourse = await this.findById(courseId, {}, { lean: true }).exec();
   const foundNodes = checksums ?
     _.map(checksums, checksum => foundCourse.nodes[checksum]) : _.values(foundCourse.nodes);
   return foundNodes;

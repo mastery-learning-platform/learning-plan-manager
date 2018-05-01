@@ -1,12 +1,13 @@
+import _ from 'lodash';
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
 import request from 'supertest';
 import should from 'should';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+
 import { config } from '../config';
 import { schema } from '../api';
-import _ from 'lodash';
 
 jest.setTimeout(10000);
 
