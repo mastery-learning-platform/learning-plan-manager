@@ -11,7 +11,7 @@ const mongooseConfig = {
   reconnectInterval: 500,
 };
 
-mongoose.connect(config.MONGODB_URL, mongooseConfig);
+mongoose.connect(`${config.MONGODB_URL}/lpm`, mongooseConfig);
 
 mongoose.connection.on('error', (err) => {
   log.error(err);

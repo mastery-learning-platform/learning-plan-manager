@@ -1,0 +1,16 @@
+version: '3'
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file:
+      - learning-plan-manager.env
+    links:
+      - mongo
+    ports:
+      - 8084:8084
+  mongo:
+    image: mvertes/alpine-mongo
+    ports:
+      - 28017:27017

@@ -2,7 +2,7 @@ language: node_js
 notifications:
   slack: theselftalk:EHiDWYYgq34Y172TrHTqA16W
 node_js:
-  - stable
+  - "10"
 services:
   - docker
 before_script:

@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import should from 'should';
 import mongoose from 'mongoose';
+import { config } from '../../../config';
 
 import { CourseModel, NodeModel } from '../../../api/course';
 
@@ -103,7 +104,7 @@ jest.setTimeout(15000);
 
 describe('Course Model', () => {
   beforeAll(async () => {
-    await mongoose.connect('mongodb://localhost/test', {
+    await mongoose.connect(`${config.MONGODB_URL}/test`, {
       autoReconnect: true,
       reconnectTries: Number.MAX_VALUE,
     });

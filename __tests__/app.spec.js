@@ -22,7 +22,7 @@ describe('Learning Plan Manager', () => {
       reconnectInterval: 500,
     };
 
-    mongoose.connect('mongodb://localhost/e2e', mongoConfig);
+    mongoose.connect(`${config.MONGODB_URL}/e2e`, mongoConfig);
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
