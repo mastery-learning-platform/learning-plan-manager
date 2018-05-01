@@ -26,13 +26,15 @@
     "start": "nodemon bin/www --exec babel-node",
     "lint": "eslint .",
     "lint-fix": "eslint --fix .",
-    "test": "jest --forceExit"
+    "test": "jest --forceExit",
+    "coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.4.3",
     "babel-preset-env": "^1.6.1",
     "babel-register": "^6.26.0",
+    "coveralls": "^3.0.0",
     "dummy-json": "^2.0.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^12.1.0",

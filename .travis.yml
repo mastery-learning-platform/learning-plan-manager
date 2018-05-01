@@ -13,6 +13,7 @@ install:
 script:
   - yarn lint
   - yarn test
+  - yarn run coverage
   - zip -qr learning-plan-manager.zip . -x *.git* node_modules/\*
 deploy:
   provider: releases
