@@ -6,18 +6,20 @@
   "author": "Nishant Jain",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.6.0",
     "body-parser": "^1.18.2",
     "bunyan": "^1.8.12",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
     "graphql": "^0.13.2",
+    "graphql-errors": "^2.1.0",
     "graphql-tools": "^2.24.0",
     "lodash": "^4.17.10",
     "mongoose": "^5.0.16",
     "supertest": "^3.0.0"
   },
   "jest": {
-    "verbose": true,
+    "verbose": false,
     "collectCoverage": true
   },
   "scripts": {
